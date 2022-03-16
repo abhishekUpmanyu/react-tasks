@@ -3,10 +3,16 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import ThemeProvider from './theme/ThemeProvider';
+import PopUpProvider from 'pop-ups/PopUpProvider';
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <ThemeProvider>
+      <PopUpProvider>
+        <App />
+      </PopUpProvider>
+    </ThemeProvider>
   </React.StrictMode>,
   document.getElementById('root')
 );

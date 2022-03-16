@@ -1,0 +1,1 @@
+export { TasksPanel as default } from './TasksPanel';

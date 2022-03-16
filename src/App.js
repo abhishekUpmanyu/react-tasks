@@ -1,23 +1,27 @@
-import logo from './logo.svg';
 import './App.css';
+import { useState } from 'react';
+import TaskPopUp from './components/PopUps/TaskPopUp';
+import TasksPanel from './components/TasksPanel';
+import TaskView from './components/TaskView';
+import { useTheme } from './theme/ThemeProvider';
+import { useTaskPopUp } from './pop-ups/PopUpProvider';
 
 function App() {
+  const darkMode = useTheme();
+
+  const [selected, setSelected] = useState(undefined);
+
+  const taskPopUp = useTaskPopUp();
+
+  const appStyle = {
+    backgroundColor: darkMode ? '#2e3047' : '#eaf4f2',
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div id="app-container" style={appStyle}>
+      {taskPopUp ? <TaskPopUp /> : <></>}
+      <TasksPanel onChangeSelection={setSelected} />
+      <TaskView selected={selected} />
     </div>
   );
 }

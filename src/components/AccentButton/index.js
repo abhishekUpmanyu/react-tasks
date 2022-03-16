@@ -1,0 +1,1 @@
+export { AccentButton as default } from './AccentButton';
