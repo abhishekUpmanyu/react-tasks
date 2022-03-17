@@ -5,12 +5,15 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import ThemeProvider from './theme/ThemeProvider';
 import PopUpProvider from 'pop-ups/PopUpProvider';
+import DataProvider from './data/DataProvider';
 
 ReactDOM.render(
   <React.StrictMode>
     <ThemeProvider>
       <PopUpProvider>
-        <App />
+        <DataProvider>
+          <App />
+        </DataProvider>
       </PopUpProvider>
     </ThemeProvider>
   </React.StrictMode>,

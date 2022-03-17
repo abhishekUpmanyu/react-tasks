@@ -8,11 +8,14 @@ import TaskCollapsibleListBuilder from './SearchAndTasks/TaskCollapsibleListBuil
 import addIcon from 'assets/icons/add.png';
 import darkModeIcon from 'assets/icons/dark-mode.png';
 import TaskPopUp from '../PopUps/TaskPopUp';
-import { useTaskPopUpVisibility } from '../../pop-ups/PopUpProvider';
+import { usePopUp, usePopUpUpdate, useTaskPopUpVisibility } from '../../pop-ups/PopUpProvider';
+import GroupPopUp from '../PopUps/GroupPopUp';
 
 export function TasksPanel(props) {
     const darkMode = useTheme();
     const toggleDarkMode = useThemeUpdate();
+
+    const updatePopUp = usePopUpUpdate();
 
     const toggleTasksPopUp = useTaskPopUpVisibility();
 
@@ -37,12 +40,13 @@ export function TasksPanel(props) {
         {
             icon: addIcon,
             text: 'Group',
-            onClick: toggleDarkMode,
+            onClick: updatePopUp.bind(this, <GroupPopUp />),
         },
         {
             icon: addIcon,
             text: 'Task',
-            onClick: toggleTasksPopUp,
+            onClick: updatePopUp.bind(this, <TaskPopUp />),
+            // onClick: toggleTasksPopUp,
         },
         {
             icon: darkModeIcon,

@@ -14,11 +14,19 @@ export default function TaskListTile(props) {
     }
 
     const style = {
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'space-between',
         borderRadius: '8px',
         backgroundColor: hover ? hoverOpacity : opacity,
         margin: '4px 0px',
         padding: '8px 16px',
     };
+
+    const checkboxStyle = {
+        borderRadius: '16px',
+        color: 'rgba(255, 255, 255, 0.3)'
+    }
 
     return (
         <div
@@ -28,6 +36,13 @@ export default function TaskListTile(props) {
             onClick={props.onClick.bind(this, props.task)}
         >
             <H3 text={props.task.title} />
+            <input
+                style={checkboxStyle}
+                type="checkbox"
+                onChange={e => {
+                    
+                }}
+            />
         </div>
     );
 }

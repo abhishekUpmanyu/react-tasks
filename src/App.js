@@ -4,10 +4,12 @@ import TaskPopUp from './components/PopUps/TaskPopUp';
 import TasksPanel from './components/TasksPanel';
 import TaskView from './components/TaskView';
 import { useTheme } from './theme/ThemeProvider';
-import { useTaskPopUp } from './pop-ups/PopUpProvider';
+import { usePopUp, useTaskPopUp } from './pop-ups/PopUpProvider';
 
 function App() {
   const darkMode = useTheme();
+
+  const popUp = usePopUp();
 
   const [selected, setSelected] = useState(undefined);
 
@@ -19,7 +21,7 @@ function App() {
 
   return (
     <div id="app-container" style={appStyle}>
-      {taskPopUp ? <TaskPopUp /> : <></>}
+      {popUp}
       <TasksPanel onChangeSelection={setSelected} />
       <TaskView selected={selected} />
     </div>

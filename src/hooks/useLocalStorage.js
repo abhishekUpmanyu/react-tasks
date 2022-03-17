@@ -8,9 +8,11 @@ function getLocalValue(key, initialValue) {
 export function useLocalStorage(key, initialValue) {
     const [value, setValue] = useState(() => getLocalValue(key, initialValue));
 
-    useEffect(() => localStorage.setItem(key, JSON.stringify(value)),
+    const setThisValue = (data) => {setValue(data); localStorage.setItem(key, JSON.stringify(value)); console.log('updated')};
+
+    useEffect(() => { console.log('hi', value)},
         [value]
     );
 
-    return [value, setValue];
+    return [value, setThisValue];
 }
