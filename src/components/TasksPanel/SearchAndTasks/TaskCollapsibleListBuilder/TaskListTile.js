@@ -28,6 +28,8 @@ export default function TaskListTile(props) {
         color: 'rgba(255, 255, 255, 0.3)'
     }
 
+    console.log('isdone?', props.task.done);
+
     return (
         <div
             style={style}
@@ -35,13 +37,14 @@ export default function TaskListTile(props) {
             onMouseLeave={setHover.bind(this, false)}
             onClick={props.onClick.bind(this, props.task)}
         >
-            <H3 text={props.task.title} />
+            {
+                props.task.done ? <strike style={{color: '#ffffff'}}><H3 text={props.task.title} /></strike> : <H3 text={props.task.title} />
+            }
             <input
                 style={checkboxStyle}
                 type="checkbox"
-                onChange={e => {
-                    
-                }}
+                checked={props.task.done}
+                onChange={props.taskDone}
             />
         </div>
     );

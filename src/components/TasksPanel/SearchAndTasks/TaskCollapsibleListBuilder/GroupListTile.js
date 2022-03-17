@@ -4,17 +4,28 @@ import arrowhead from 'assets/icons/arrowhead.png';
 import plus from 'assets/icons/plus.png';
 import { useTheme } from "../../../../theme/ThemeProvider";
 import TaskListTile from "./TaskListTile";
-import { usePopUpUpdate, useTaskPopUpVisibility } from "../../../../pop-ups/PopUpProvider";
+import { usePopUpUpdate } from "../../../../pop-ups/PopUpProvider";
 import TaskPopUp from "../../../PopUps/TaskPopUp";
-import { useData } from "../../../../data/DataProvider";
+import { useData, useDataUpdate } from "../../../../data/DataProvider";
 
 export default function GroupListTile(props) {
     const [collapsed, setCollapsed] = useState(true);
     const [hover, setHover] = useState(false);
 
     const data = useData();
+    const updateData = useDataUpdate();
 
     const group = data[props.groupId];
+
+    const [notDoneCount, setNotDoneCount] = useState(function() {
+        var count = 0;
+        for (let taskKey in group.tasks) {
+            if (!group.tasks[taskKey].done) {
+                count += 1;
+            }
+        }
+        return count;
+    });
 
     const updatePopUp = usePopUpUpdate();
 
@@ -56,6 +67,17 @@ export default function GroupListTile(props) {
         filter: darkMode ? 'invert() opacity(70%)' : ''
     };
 
+    const taskDone = (id) => {
+        console.log(data[props.groupId]['tasks'][id]['done'], props.groupId);
+        data[props.groupId]['tasks'][id]['done'] = !data[props.groupId].tasks[id]['done'];
+        if (data[props.groupId].tasks[id]['done']) {
+            setNotDoneCount(notDoneCount-1);
+        } else {
+            setNotDoneCount(notDoneCount+1);
+        }
+        updateData(data);
+    }
+
     return (
         <div style={style}>
             <div
@@ -67,7 +89,9 @@ export default function GroupListTile(props) {
                 <div style={groupRowStyle}>
                     <div style={arrowNameRowStyle}>
                         <img src={arrowhead} style={arrowStyle} width={'8px'} alt="arrow icon" />
-                        <H3 text={group.name} />
+                        {
+                            notDoneCount===0 ? <strike style={{color: '#ffffff'}}><H3 text={group.name} /></strike> : <H3 text={group.name} />
+                        }
                     </div>
                     <img
                         src={plus}
@@ -79,7 +103,13 @@ export default function GroupListTile(props) {
                 </div>
             </div>
             {!collapsed ? Object.keys(group.tasks).map(key =>
-                <TaskListTile key={group.tasks[key].uuid} task={group.tasks[key]} isInGroup={true} onClick={props.onClick} />
+                <TaskListTile
+                    key={group.tasks[key].uuid}
+                    task={group.tasks[key]} 
+                    isInGroup={true} 
+                    onClick={props.onClick}
+                    taskDone={taskDone.bind(this, group.tasks[key].uuid)}
+                />
             ) : null}
         </div>
     );
