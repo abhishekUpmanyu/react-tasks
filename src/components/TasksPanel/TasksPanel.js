@@ -1,14 +1,12 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useTheme, useThemeUpdate } from '../../theme/ThemeProvider';
 import H1 from '../../typography/H1';
 import { FooterButtons } from './FooterButtons/FooterButtons';
 import SearchAndTasks from './SearchAndTasks/SearchAndTasks';
-import SearchBox from './SearchAndTasks/SearchBox';
-import TaskCollapsibleListBuilder from './SearchAndTasks/TaskCollapsibleListBuilder/TaskCollapsibleListBuilder';
 import addIcon from 'assets/icons/add.png';
 import darkModeIcon from 'assets/icons/dark-mode.png';
 import TaskPopUp from '../PopUps/TaskPopUp';
-import { usePopUp, usePopUpUpdate, useTaskPopUpVisibility } from '../../pop-ups/PopUpProvider';
+import { usePopUpUpdate } from '../../pop-ups/PopUpProvider';
 import GroupPopUp from '../PopUps/GroupPopUp';
 
 export function TasksPanel(props) {
@@ -16,8 +14,6 @@ export function TasksPanel(props) {
     const toggleDarkMode = useThemeUpdate();
 
     const updatePopUp = usePopUpUpdate();
-
-    const toggleTasksPopUp = useTaskPopUpVisibility();
 
     const tasksPanelStyle = {
         display: 'flex',

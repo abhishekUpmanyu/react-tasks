@@ -7,16 +7,14 @@ import { useTheme } from './theme/ThemeProvider';
 import { usePopUp, useTaskPopUp } from './pop-ups/PopUpProvider';
 
 function App() {
+  const [selected, setSelected] = useState(undefined);
+
   const darkMode = useTheme();
 
   const popUp = usePopUp();
 
-  const [selected, setSelected] = useState(undefined);
-
-  const taskPopUp = useTaskPopUp();
-
   const appStyle = {
-    backgroundColor: darkMode ? '#2e3047' : '#eaf4f2',
+    backgroundColor: darkMode ? selected?.done ? '#3bba9c' : '#2e3047' : '#eaf4f2',
   };
 
   return (

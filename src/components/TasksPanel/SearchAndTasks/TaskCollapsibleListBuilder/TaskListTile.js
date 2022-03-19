@@ -1,8 +1,15 @@
+import { useTasks, useTasksUpdate } from "data/DataProvider";
 import React, { useState } from "react";
 import H3 from "../../../../typography/H3";
 
 export default function TaskListTile(props) {
     const [hover, setHover] = useState(false);
+
+    const tasks = useTasks();
+    const tasksUpdate  = useTasksUpdate();
+
+    const task = tasks[props.taskId];
+
     var opacity, hoverOpacity;
 
     if (props.isInGroup) {
@@ -28,23 +35,28 @@ export default function TaskListTile(props) {
         color: 'rgba(255, 255, 255, 0.3)'
     }
 
-    console.log('isdone?', props.task.done);
+    const toggleDone = () => {
+        tasks[props.taskId].done = !tasks[props.taskId].done;
+        tasksUpdate(tasks);
+    };
+
+    console.log('isdone?', task.done);
 
     return (
         <div
             style={style}
             onMouseEnter={setHover.bind(this, true)}
             onMouseLeave={setHover.bind(this, false)}
-            onClick={props.onClick.bind(this, props.task)}
+            onClick={props.onClick.bind(this, task)}
         >
             {
-                props.task.done ? <strike style={{color: '#ffffff'}}><H3 text={props.task.title} /></strike> : <H3 text={props.task.title} />
+                task.done ? <strike style={{color: '#ffffff'}}><H3 text={task.title} /></strike> : <H3 text={task.title} />
             }
             <input
                 style={checkboxStyle}
                 type="checkbox"
-                checked={props.task.done}
-                onChange={props.taskDone}
+                checked={task.done}
+                onChange={toggleDone}
             />
         </div>
     );

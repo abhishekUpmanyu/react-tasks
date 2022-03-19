@@ -1,20 +1,31 @@
 import React, { useContext } from "react";
 import { useLocalStorage } from "../hooks/useLocalStorage";
 
-const DataContext = React.createContext();
-const DataUpdateContext = React.createContext();
+const GroupsContext = React.createContext();
+const GroupsUpdateContext = React.createContext();
 
-export const useData = () => useContext(DataContext);
-export const useDataUpdate = () => useContext(DataUpdateContext);
+const TasksContext = React.createContext();
+const TasksUpdateContext = React.createContext();
+
+export const useGroups = () => useContext(GroupsContext);
+export const useGroupsUpdate = () => useContext(GroupsUpdateContext);
+
+export const useTasks = () => useContext(TasksContext);
+export const useTasksUpdate = () => useContext(TasksUpdateContext);
 
 export default function DataProvider({children}) {
-    const [data, setData] = useLocalStorage('allData', {});
+    const [tasks, setTasks] = useLocalStorage('tasks', {});
+    const [groups, setGroups] = useLocalStorage('groups', {});
 
     return (
-        <DataContext.Provider value={data}>
-            <DataUpdateContext.Provider value={setData}>
-                {children}
-            </DataUpdateContext.Provider>
-        </DataContext.Provider>
+                <GroupsContext.Provider value={groups}>
+                    <GroupsUpdateContext.Provider value={setGroups}>
+                        <TasksContext.Provider value={tasks}>
+                            <TasksUpdateContext.Provider value={setTasks}>
+                                {children}
+                            </TasksUpdateContext.Provider>
+                        </TasksContext.Provider>
+                    </GroupsUpdateContext.Provider>
+                </GroupsContext.Provider>
     );
 }

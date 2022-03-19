@@ -3,15 +3,18 @@ import { useTheme } from "../../theme/ThemeProvider";
 import AccentButton from "components/AccentButton";
 import { usePopUpUpdate } from "../../pop-ups/PopUpProvider";
 import Caption from 'typography/Caption';
-import { useData, useDataUpdate } from "../../data/DataProvider";
+import { useGroups, useGroupsUpdate, useTasks, useTasksUpdate } from "../../data/DataProvider";
 import { v4 as uuid } from 'uuid';
 
 export default function TaskPopUp(props) {
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
 
-    const data = useData();
-    const dataUpdate = useDataUpdate();
+    const tasks = useTasks();
+    const tasksUpdate = useTasksUpdate();
+
+    const groups = useGroups();
+    const groupsUpdate = useGroupsUpdate();
 
     const updatePopUp = usePopUpUpdate();
 
@@ -74,19 +77,21 @@ export default function TaskPopUp(props) {
 
     const addTask = () => {
         var id = uuid();
+        var groupId = props.groupId;
         var task = {
             uuid: id,
             title: title,
             description: description,
             color: '#ffffff',
             done: false,
+            group: groupId
         };
-        if (props.groupId) {
-            data[props.groupId].tasks[id] = task;
-        } else {
-            data[id] = task;
+        tasks[id] = task;
+        if (groupId) {
+            groups[groupId]['tasks'][id] = true;
         }
-        dataUpdate(data);
+        tasksUpdate(tasks);
+        groupsUpdate(groups);
         updatePopUp(<></>);
     }
 

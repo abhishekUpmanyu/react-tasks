@@ -2,31 +2,32 @@ import React, { useState } from "react";
 import { useTheme } from "../../theme/ThemeProvider";
 import AccentButton from "components/AccentButton";
 import { usePopUpUpdate } from "../../pop-ups/PopUpProvider";
-import { useData, useDataUpdate } from "../../data/DataProvider";
+import { useGroups, useGroupsUpdate, useTasks, useTasksUpdate } from "../../data/DataProvider";
 import { v4 as uuid } from 'uuid';
 
 export default function GroupPopUp(props) {
     const [name, setName] = useState('');
 
     const darkMode = useTheme();
-    const data = useData();
-    const updateData = useDataUpdate();
+    
     const updatePopUp = usePopUpUpdate();
 
+    const tasks = useTasks();
+    const tasksUpdate = useTasksUpdate();
 
-    const [tasks, setTasks] = useState(
-        function () {
-            var obj = {};
-            for (let key in data) {
-                if (data[key].hasOwnProperty('title')) {
-                    obj[key] = false;
-                }
+    const groups = useGroups();
+    const groupsUpdate = useGroupsUpdate();
+
+
+    const grouplessTasks = function () {
+        var obj = {};
+        for (let key in tasks) {
+            if (!tasks[key]['group']) {
+                obj[key] = false;
             }
-            return obj;
         }
-    );
-
-    console.log(tasks);
+        return obj;
+    }();
 
     const backgroundStyle = {
         position: 'fixed',
@@ -75,11 +76,11 @@ export default function GroupPopUp(props) {
 
     const createGroup = () => {
         var id = uuid();
-        var selectedTasks = {};
-        for (let key in tasks) {
-            if (tasks[key]) {
-                selectedTasks[key] = data[key];
-                delete data[key];
+        var selectedTasks = [];
+        for (let key in grouplessTasks) {
+            if (grouplessTasks[key]) {
+                selectedTasks.push(key);
+                tasks[key]['group'] = id;
             }
         }
         var group = {
@@ -87,14 +88,10 @@ export default function GroupPopUp(props) {
             name: name,
             tasks: selectedTasks,
         };
-        data[id] = group;
-        updateData(data);
+        groups[id] = group;
+        groupsUpdate(groups);
+        tasksUpdate(tasks);
         updatePopUp(<></>);
-    }
-
-    function filterObject(obj, callback) {
-        return Object.fromEntries(Object.entries(obj).
-            filter(([key, val]) => callback(val, key)));
     }
 
     return (
@@ -109,20 +106,16 @@ export default function GroupPopUp(props) {
                         placeholder="title"
                     /><br />
                     {
-                        Object.keys(tasks).map(key => {
-                            if (data[key].hasOwnProperty('title')) {
-                                return <span>
-                                    <input
-                                        style={{ margin: '12px' }}
-                                        value={tasks[key]} id={key}
-                                        onChange={e => { tasks[e.target.id] = !tasks[e.target.id]; console.log(tasks) }}
-                                        type="checkbox"
-                                    />{data[key].title}
-                                </span>;
-                            } else {
-                                return <></>;
-                            }
-                        })
+                        Object.keys(grouplessTasks).map(key =>
+                            <span>
+                                <input
+                                    style={{ margin: '12px' }}
+                                    value={grouplessTasks[key]} id={key}
+                                    onChange={e => grouplessTasks[e.target.id] = !grouplessTasks[e.target.id]}
+                                    type="checkbox"
+                                />{tasks[key].title}
+                            </span>
+                        )
                     }
                 </div>
                 <div style={buttonsContainerStyle}>
