@@ -88,17 +88,20 @@ export default function TaskPopUp(props) {
         };
         tasks[id] = task;
         if (groupId) {
-            groups[groupId]['tasks'][id] = true;
+            groups[groupId]['tasks'].push(id);
         }
         tasksUpdate(tasks);
         groupsUpdate(groups);
+        if (props.groupAction) {
+            props.groupAction();
+        }
         updatePopUp(<></>);
     }
 
     return (
         <div style={backgroundStyle}>
             <div style={popUpStyle}>
-                {props.group ? <><Caption text={`Group: ${props.group.name}`} /><br /></> : <></>}
+                {props.groupId ? <><Caption text={`Group: ${groups[props.groupId].name}`} /><br /></> : <></>}
                 <div style={titleDescriptionContainerStyle}>
                     <input
                         style={titleInputStyle}

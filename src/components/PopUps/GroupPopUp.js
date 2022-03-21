@@ -5,7 +5,7 @@ import { usePopUpUpdate } from "../../pop-ups/PopUpProvider";
 import { useGroups, useGroupsUpdate, useTasks, useTasksUpdate } from "../../data/DataProvider";
 import { v4 as uuid } from 'uuid';
 
-export default function GroupPopUp(props) {
+export default function GroupPopUp({ group }) {
     const [name, setName] = useState('');
 
     const darkMode = useTheme();
@@ -97,13 +97,13 @@ export default function GroupPopUp(props) {
     return (
         <div style={backgroundStyle}>
             <div style={popUpStyle}>
-                {props.group ? props.group.name : <></>}
+                {group ? group.name : <></>}
                 <div style={titleDescriptionContainerStyle}>
                     < input
                         style={titleInputStyle}
                         value={name}
                         onChange={e => setName(e.target.value)}
-                        placeholder="title"
+                        placeholder="name"
                     /><br />
                     {
                         Object.keys(grouplessTasks).map(key =>

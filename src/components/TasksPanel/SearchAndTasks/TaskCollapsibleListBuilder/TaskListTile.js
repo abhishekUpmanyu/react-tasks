@@ -2,17 +2,17 @@ import { useTasks, useTasksUpdate } from "data/DataProvider";
 import React, { useState } from "react";
 import H3 from "../../../../typography/H3";
 
-export default function TaskListTile(props) {
+export default function TaskListTile({ taskId, isInGroup, onClick, taskDone }) {
     const [hover, setHover] = useState(false);
 
     const tasks = useTasks();
     const tasksUpdate  = useTasksUpdate();
 
-    const task = tasks[props.taskId];
+    const task = tasks[taskId];
 
     var opacity, hoverOpacity;
 
-    if (props.isInGroup) {
+    if (isInGroup) {
         opacity = 'rgba(0, 0, 0, 0)';
         hoverOpacity = 'rgba(0, 0, 0, 0.05)';
     } else {
@@ -26,7 +26,7 @@ export default function TaskListTile(props) {
         justifyContent: 'space-between',
         borderRadius: '8px',
         backgroundColor: hover ? hoverOpacity : opacity,
-        margin: '4px 0px',
+        margin: '8px 0px',
         padding: '8px 16px',
     };
 
@@ -36,7 +36,7 @@ export default function TaskListTile(props) {
     }
 
     const toggleDone = () => {
-        tasks[props.taskId].done = !tasks[props.taskId].done;
+        tasks[taskId].done = !tasks[taskId].done;
         tasksUpdate(tasks);
     };
 
@@ -47,7 +47,7 @@ export default function TaskListTile(props) {
             style={style}
             onMouseEnter={setHover.bind(this, true)}
             onMouseLeave={setHover.bind(this, false)}
-            onClick={props.onClick.bind(this, task)}
+            onClick={onClick.bind(this, task)}
         >
             {
                 task.done ? <strike style={{color: '#ffffff'}}><H3 text={task.title} /></strike> : <H3 text={task.title} />
@@ -56,7 +56,7 @@ export default function TaskListTile(props) {
                 style={checkboxStyle}
                 type="checkbox"
                 checked={task.done}
-                onChange={toggleDone}
+                onChange={isInGroup ? taskDone : toggleDone}
             />
         </div>
     );

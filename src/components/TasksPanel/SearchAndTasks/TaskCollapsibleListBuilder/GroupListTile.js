@@ -21,8 +21,8 @@ export default function GroupListTile(props) {
 
     const [notDoneCount, setNotDoneCount] = useState(function() {
         var count = 0;
-        for (let taskKey in group.tasks) {
-            if (!group.tasks[taskKey].done) {
+        for (let taskKey of group.tasks) {
+            if (!tasks[taskKey].done) {
                 count += 1;
             }
         }
@@ -76,7 +76,12 @@ export default function GroupListTile(props) {
         } else {
             setNotDoneCount(notDoneCount+1);
         }
+        console.log(notDoneCount);
         tasksUpdate(tasks);
+    }
+
+    const updateCount = () => {
+        setNotDoneCount(notDoneCount+1);
     }
 
     return (
@@ -104,7 +109,7 @@ export default function GroupListTile(props) {
                         src={plus}
                         style={arrowStyle}
                         width={'12px'}
-                        onClick={updatePopUp.bind(this, <TaskPopUp group={group} groupId={props.groupId} />)}
+                        onClick={updatePopUp.bind(this, <TaskPopUp groupId={props.groupId} groupAction={updateCount} />)}
                         alt="add icon"
                     />
                 </div>

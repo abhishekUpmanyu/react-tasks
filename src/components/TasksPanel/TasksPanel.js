@@ -42,7 +42,6 @@ export function TasksPanel(props) {
             icon: addIcon,
             text: 'Task',
             onClick: updatePopUp.bind(this, <TaskPopUp />),
-            // onClick: toggleTasksPopUp,
         },
         {
             icon: darkModeIcon,
