@@ -1,7 +1,6 @@
 import './App.css';
 import { useState } from 'react';
 import TasksPanel from './components/TasksPanel';
-import TaskView from './components/MainView';
 import { useTheme } from './theme/ThemeProvider';
 import { usePopUp } from './pop-ups/PopUpProvider';
 import MainView from 'components/MainView/';
