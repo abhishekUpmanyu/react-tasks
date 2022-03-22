@@ -5,9 +5,7 @@ import { useGroups, useGroupsUpdate, useTasks, useTasksUpdate } from "../../../.
 
 export default function TaskCollapsibleListBuilder(props) {
     const tasks = useTasks();
-    const tasksUpdate = useTasksUpdate();
     const groups = useGroups();
-    const groupsUpdate = useGroupsUpdate();
 
     return (
         <div>
