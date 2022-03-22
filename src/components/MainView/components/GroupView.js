@@ -34,7 +34,7 @@ export default class GroupView extends React.Component {
                                 <br />
                                 {
                                     this.state.tasks.map(
-                                        taskId => <TaskBigTile task={tasks[taskId]} />
+                                        taskId => <TaskBigTile key={taskId} task={tasks[taskId]} />
                                     )
                                 }
                             </>

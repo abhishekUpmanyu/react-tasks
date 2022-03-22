@@ -1,11 +1,31 @@
-import React from "react";
-import TaskListTile from './TaskListTile';
-import GroupListTile from "./GroupListTile";
-import { useGroups, useTasks } from "../../../../data/DataProvider";
+import React, { useEffect, useState } from "react";
+import TaskListTile from './components/TaskListTile';
+import GroupListTile from "./components/GroupListTile";
+import { useGroups, useGroupsUpdate, useTasks, useTasksUpdate } from "../../../../data/DataProvider";
 
 export default function TaskCollapsibleListBuilder(props) {
     const tasks = useTasks();
+    const tasksUpdate = useTasksUpdate();
     const groups = useGroups();
+    const groupsUpdate = useGroupsUpdate();
+
+    const [displayTasks, setDisplayTasks] = useState(tasks);
+    const [displayGroups, useDisplayGroups] = useState(groups);
+
+    useEffect(() => {
+        tasksUpdate(displayTasks);
+    }, [displayTasks]);
+
+    const deleteTask = (taskId) => {
+        var groupId = tasks[taskId].group
+        if (groupId) {
+            var index = groups[groupId].tasks.indexOf(taskId);
+            groups[groupId].tasks.splice(index, 1);
+        }
+        delete tasks[taskId];
+        tasksUpdate(tasks);
+        groupsUpdate(groups);
+    };
 
     return (
         <div>
@@ -27,18 +47,6 @@ export default function TaskCollapsibleListBuilder(props) {
                     /> : <></>
                 )
             }
-            {/* {
-                Object.keys(data).map(
-                    key => (data[key].hasOwnProperty('title')) ?
-                        <TaskListTile
-                            key={data[key].uuid}
-                            task={data[key]}
-                            onClick={props.onChangeSelection}
-                            taskDone={taskDone.bind(this, key)}
-                        /> :
-                        <GroupListTile key={data[key].uuid} groupId={key} onClick={props.onChangeSelection} />
-                )
-            } */}
         </div>
     );
 }

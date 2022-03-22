@@ -2,15 +2,15 @@ import React, { useState } from "react";
 import H3 from "typography/H3";
 import arrowhead from 'assets/icons/arrowhead.png';
 import plus from 'assets/icons/plus.png';
-import { useTheme } from "../../../../theme/ThemeProvider";
+import { useTheme } from "../../../../../theme/ThemeProvider";
 import TaskListTile from "./TaskListTile";
-import { usePopUpUpdate } from "../../../../pop-ups/PopUpProvider";
-import TaskPopUp from "../../../PopUps/TaskPopUp";
-import { useGroups, useGroupsUpdate, useTasks, useTasksUpdate } from "../../../../data/DataProvider";
+import { usePopUpUpdate } from "../../../../../pop-ups/PopUpProvider";
+import TaskPopUp from "../../../../PopUps/TaskPopUp";
+import { useGroups, useGroupsUpdate, useTasks, useTasksUpdate } from "../../../../../data/DataProvider";
 import { useMainViewUpdate } from "components/MainView/MainViewProvider";
 import GroupView from "components/MainView/components/GroupView";
 
-export default function GroupListTile(props) {
+export default function GroupListTile({ groupId, onClick }) {
     const [collapsed, setCollapsed] = useState(true);
     const [hover, setHover] = useState(false);
 
@@ -22,7 +22,7 @@ export default function GroupListTile(props) {
 
     const mainViewUpdate = useMainViewUpdate();
 
-    const group = groups[props.groupId];
+    const group = groups[groupId];
 
     const [notDoneCount, setNotDoneCount] = useState(function() {
         var count = 0;
@@ -75,14 +75,12 @@ export default function GroupListTile(props) {
     };
 
     const taskDone = (id) => {
-        tasks[id]['done'] = !tasks[id]['done'];
         if (tasks[id]['done']) {
             setNotDoneCount(notDoneCount-1);
         } else {
             setNotDoneCount(notDoneCount+1);
         }
         console.log(notDoneCount);
-        tasksUpdate(tasks);
     }
 
     const updateCount = () => {
@@ -101,8 +99,8 @@ export default function GroupListTile(props) {
                             name={group.name}
                             tasks={group.tasks}
                             onUnmount={function(name, tasks) {
-                                groups[props.groupId].name = name;
-                                groups[props.groupId].tasks = tasks;
+                                groups[groupId].name = name;
+                                groups[groupId].tasks = tasks;
                                 groupsUpdate(groups);
                             }}
                         />
@@ -128,7 +126,7 @@ export default function GroupListTile(props) {
                         src={plus}
                         style={arrowStyle}
                         width={'12px'}
-                        onClick={updatePopUp.bind(this, <TaskPopUp groupId={props.groupId} groupAction={updateCount} />)}
+                        onClick={updatePopUp.bind(this, <TaskPopUp groupId={groupId} groupAction={updateCount} />)}
                         alt="add icon"
                     />
                 </div>
@@ -137,8 +135,8 @@ export default function GroupListTile(props) {
                 <TaskListTile
                     key={key}
                     taskId={key} 
-                    isInGroup={true} 
-                    onClick={props.onClick}
+                    groupId={groupId} 
+                    onClick={onClick}
                     taskDone={taskDone.bind(this, key)}
                 />
             ) : null}
