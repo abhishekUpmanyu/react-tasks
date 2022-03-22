@@ -1,9 +1,10 @@
 import './App.css';
 import { useState } from 'react';
 import TasksPanel from './components/TasksPanel';
-import TaskView from './components/TaskView';
+import TaskView from './components/MainView';
 import { useTheme } from './theme/ThemeProvider';
 import { usePopUp } from './pop-ups/PopUpProvider';
+import MainView from 'components/MainView/';
 
 function App() {
   const [selected, setSelected] = useState(undefined);
@@ -25,7 +26,7 @@ function App() {
     <div id="app-container" style={appStyle}>
       {popUp}
       <TasksPanel onChangeSelection={updateSelected} />
-      <TaskView selected={selected} />
+      <MainView />
     </div>
   );
 }

@@ -6,7 +6,9 @@ import { useTheme } from "../../../../theme/ThemeProvider";
 import TaskListTile from "./TaskListTile";
 import { usePopUpUpdate } from "../../../../pop-ups/PopUpProvider";
 import TaskPopUp from "../../../PopUps/TaskPopUp";
-import { useGroups, useTasks, useTasksUpdate } from "../../../../data/DataProvider";
+import { useGroups, useGroupsUpdate, useTasks, useTasksUpdate } from "../../../../data/DataProvider";
+import { useMainViewUpdate } from "components/MainView/MainViewProvider";
+import GroupView from "components/MainView/components/GroupView";
 
 export default function GroupListTile(props) {
     const [collapsed, setCollapsed] = useState(true);
@@ -16,6 +18,9 @@ export default function GroupListTile(props) {
     const tasksUpdate = useTasksUpdate();
 
     const groups = useGroups();
+    const groupsUpdate = useGroupsUpdate();
+
+    const mainViewUpdate = useMainViewUpdate();
 
     const group = groups[props.groupId];
 
@@ -88,7 +93,21 @@ export default function GroupListTile(props) {
         <div style={style}>
             <div
                 style={groupTileStyle}
-                onClick={props.onClick.bind(this, group)}
+                onClick={
+                    mainViewUpdate.bind(
+                        this,
+                        <GroupView
+                            key={group.uuid}
+                            name={group.name}
+                            tasks={group.tasks}
+                            onUnmount={function(name, tasks) {
+                                groups[props.groupId].name = name;
+                                groups[props.groupId].tasks = tasks;
+                                groupsUpdate(groups);
+                            }}
+                        />
+                    )
+                }
                 onMouseEnter={setHover.bind(this, true)}
                 onMouseLeave={setHover.bind(this, false)}
             >

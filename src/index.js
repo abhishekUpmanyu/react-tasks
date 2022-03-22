@@ -6,15 +6,18 @@ import reportWebVitals from './reportWebVitals';
 import ThemeProvider from './theme/ThemeProvider';
 import PopUpProvider from 'pop-ups/PopUpProvider';
 import DataProvider from './data/DataProvider';
+import MainViewProvider from 'components/MainView/MainViewProvider';
 
 ReactDOM.render(
   <React.StrictMode>
     <ThemeProvider>
-      <PopUpProvider>
-        <DataProvider>
-          <App />
-        </DataProvider>
-      </PopUpProvider>
+      <MainViewProvider>
+        <PopUpProvider>
+          <DataProvider>
+            <App />
+          </DataProvider>
+        </PopUpProvider>
+      </MainViewProvider>
     </ThemeProvider>
   </React.StrictMode>,
   document.getElementById('root')

@@ -1,3 +1,5 @@
+import TaskView from "components/MainView/components/TaskView";
+import { useMainViewUpdate } from "components/MainView/MainViewProvider";
 import { useTasks, useTasksUpdate } from "data/DataProvider";
 import React, { useState } from "react";
 import H3 from "../../../../typography/H3";
@@ -7,6 +9,11 @@ export default function TaskListTile({ taskId, isInGroup, onClick, taskDone }) {
 
     const tasks = useTasks();
     const tasksUpdate  = useTasksUpdate();
+
+
+    const [isDone, setIsDone] = useState(tasks[taskId].done);
+
+    const mainViewUpdate = useMainViewUpdate();
 
     const task = tasks[taskId];
 
@@ -37,20 +44,34 @@ export default function TaskListTile({ taskId, isInGroup, onClick, taskDone }) {
 
     const toggleDone = () => {
         tasks[taskId].done = !tasks[taskId].done;
+        setIsDone(tasks[taskId].done);
         tasksUpdate(tasks);
     };
-
-    console.log('isdone?', task.done);
 
     return (
         <div
             style={style}
             onMouseEnter={setHover.bind(this, true)}
             onMouseLeave={setHover.bind(this, false)}
-            onClick={onClick.bind(this, task)}
+            onClick={
+                mainViewUpdate.bind(
+                    this,
+                    <TaskView
+                        key={task.uuid}
+                        title={task.title}
+                        description={task.description}
+                        onUnmount={function(title, description) {
+                            tasks[task.uuid]['title'] = title;
+                            tasks[task.uuid]['description'] = description;
+                            tasksUpdate(tasks);
+                            console.log('task updated');
+                        }}
+                    />
+                )
+            }
         >
             {
-                task.done ? <strike style={{color: '#ffffff'}}><H3 text={task.title} /></strike> : <H3 text={task.title} />
+                isDone ? <strike style={{color: '#ffffff'}}><H3 text={task.title} /></strike> : <H3 text={task.title} />
             }
             <input
                 style={checkboxStyle}

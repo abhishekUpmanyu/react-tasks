@@ -7,7 +7,7 @@ export function FooterButtons(props) {
         display: 'flex',
         flexDirection: 'row',
         justifyContent: 'stretch',
-        columnGap: '4px',
+        columnGap: '8px',
         width: '100%',
     }
 
