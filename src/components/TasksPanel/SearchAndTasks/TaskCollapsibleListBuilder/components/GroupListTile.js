@@ -9,13 +9,13 @@ import TaskPopUp from "../../../../PopUps/TaskPopUp";
 import { useGroups, useGroupsUpdate, useTasks, useTasksUpdate } from "../../../../../data/DataProvider";
 import { useMainViewUpdate } from "components/MainView/MainViewProvider";
 import GroupView from "components/MainView/components/GroupView";
+import SmallIconButton from "./SmallIconButton";
 
 export default function GroupListTile({ groupId, onClick }) {
     const [collapsed, setCollapsed] = useState(true);
     const [hover, setHover] = useState(false);
 
     const tasks = useTasks();
-    const tasksUpdate = useTasksUpdate();
 
     const groups = useGroups();
     const groupsUpdate = useGroupsUpdate();
@@ -122,12 +122,9 @@ export default function GroupListTile({ groupId, onClick }) {
                             notDoneCount===0 ? <strike style={{color: '#ffffff'}}><H3 text={group.name} /></strike> : <H3 text={group.name} />
                         }
                     </div>
-                    <img
-                        src={plus}
-                        style={arrowStyle}
-                        width={'12px'}
+                    <SmallIconButton
+                        icon={plus}
                         onClick={updatePopUp.bind(this, <TaskPopUp groupId={groupId} groupAction={updateCount} />)}
-                        alt="add icon"
                     />
                 </div>
             </div>

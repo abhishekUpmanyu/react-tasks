@@ -17,11 +17,22 @@ export default function TaskBigTile({ taskId }) {
     const style = {
         display: 'flex',
         flexDirection: 'row',
-        justifyContent: 'space-between',
+        alignItems: 'center',
+        columnGap: '8px',
         borderRadius: '8px',
         backgroundColor: hover ? 'rgba(0, 0, 0, 0.2)' : 'rgba(0, 0, 0, 0.1)',
-        margin: '16px 32px',
+        margin: '16px 16px',
         padding: '16px 32px',
+    };
+
+    const checkboxStyle = {
+        borderRadius: '16px',
+        color: 'rgba(255, 255, 255, 0.3)'
+    }
+
+    const toggleDone = () => {
+        tasks[taskId].done = !tasks[taskId].done;
+        tasksUpdate(tasks);
     };
 
     return (
@@ -43,7 +54,17 @@ export default function TaskBigTile({ taskId }) {
             onMouseEnter={setHover.bind(this, true)}
             onMouseLeave={setHover.bind(this, false)}
         >
-            <H3 text={task.title} />
+            <input
+                    style={checkboxStyle}
+                    type="checkbox"
+                    checked={task.done}
+                    onChange={toggleDone}
+                    onClick={e => e.stopPropagation()}
+            />
+            {task.done ? 
+                <strike style={{color: '#ffffff'}}><H3 text={task.title} /></strike> : 
+                <H3 text={task.title} />
+            }
         </div>
     );
 }

@@ -87,7 +87,6 @@ export default function TaskListTile({ taskId, groupId, taskDone }) {
                             tasks[task.uuid]['title'] = title;
                             tasks[task.uuid]['description'] = description;
                             tasksUpdate(tasks);
-                            console.log('task updated');
                         }}
                     />
                 )
@@ -102,6 +101,7 @@ export default function TaskListTile({ taskId, groupId, taskDone }) {
                     type="checkbox"
                     checked={task.done}
                     onChange={toggleDone}
+                    onClick={e => e.stopPropagation()}
                 />
                 <SmallIconButton
                     icon={bin}
