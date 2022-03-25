@@ -12,8 +12,6 @@ export default function TaskListTile({ taskId, groupId, taskDone }) {
     const tasks = useTasks();
     const tasksUpdate = useTasksUpdate();
 
-    const [isDone, setIsDone] = useState(tasks[taskId].done);
-
     const mainViewUpdate = useMainViewUpdate();
 
     const task = tasks[taskId];
@@ -52,7 +50,6 @@ export default function TaskListTile({ taskId, groupId, taskDone }) {
 
     const toggleDone = () => {
         task.done = !task.done;
-        setIsDone(task.done);
         tasksUpdate.addTask(task);
         if (taskDone) taskDone();
     };
@@ -87,7 +84,7 @@ export default function TaskListTile({ taskId, groupId, taskDone }) {
             }
         >
             {
-                isDone ? <strike style={{ color: '#ffffff' }}><H3 text={task.title} /></strike> : <H3 text={task.title} />
+                task.done ? <strike style={{ color: '#ffffff' }}><H3 text={task.title} /></strike> : <H3 text={task.title} />
             }
             <div style={trailingActionsStyle}>
                 <input
