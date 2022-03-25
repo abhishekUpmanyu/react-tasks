@@ -31,10 +31,21 @@ export default class GroupView extends React.Component {
                                 />
                                 <br /><br />
                                 <H2 text="tasks" />
-                                <br />
                                 {
                                     this.state.tasks.map(
-                                        taskId => <TaskBigTile key={taskId} task={tasks[taskId]} />
+                                        taskId => {
+                                            if (!tasks[taskId].done)
+                                                return <TaskBigTile key={taskId} taskId={taskId} />
+                                        }
+                                    )
+                                }
+                                <hr style={{borderTop: '1px solid'}} />
+                                {
+                                    this.state.tasks.map(
+                                        taskId => {
+                                            if (tasks[taskId].done)
+                                                return <TaskBigTile key={taskId} taskId={taskId} />
+                                        }
                                     )
                                 }
                             </>

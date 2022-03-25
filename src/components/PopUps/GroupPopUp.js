@@ -53,7 +53,7 @@ export default function GroupPopUp({ group }) {
         padding: '32px',
     };
 
-    const titleDescriptionContainerStyle = {
+    const nameContainerStyle = {
         display: 'flex',
         flexDirection: 'column',
         flex: '1 1 auto',
@@ -77,28 +77,30 @@ export default function GroupPopUp({ group }) {
     const createGroup = () => {
         var id = uuid();
         var selectedTasks = [];
+        var tasksDone = 0;
         for (let key in grouplessTasks) {
             if (grouplessTasks[key]) {
                 selectedTasks.push(key);
                 tasks[key]['group'] = id;
+                if (tasks[key]['group'].done) tasksDone += 1;
             }
         }
         var group = {
             uuid: id,
             name: name,
             tasks: selectedTasks,
+            tasksDone: tasksDone,
         };
         groups[id] = group;
         groupsUpdate(groups);
-        tasksUpdate(tasks);
+        tasksUpdate.updateAtOnce(tasks);
         updatePopUp(<></>);
     }
 
     return (
         <div style={backgroundStyle}>
             <div style={popUpStyle}>
-                {group ? group.name : <></>}
-                <div style={titleDescriptionContainerStyle}>
+                <div style={nameContainerStyle}>
                     < input
                         style={titleInputStyle}
                         value={name}

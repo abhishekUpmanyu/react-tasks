@@ -86,12 +86,7 @@ export default function TaskPopUp(props) {
             done: false,
             group: groupId
         };
-        tasks[id] = task;
-        if (groupId) {
-            groups[groupId]['tasks'].push(id);
-        }
-        tasksUpdate(tasks);
-        groupsUpdate(groups);
+        tasksUpdate.addTask(task, groupId);
         if (props.groupAction) {
             props.groupAction();
         }

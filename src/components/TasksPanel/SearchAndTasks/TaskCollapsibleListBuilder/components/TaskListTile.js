@@ -10,9 +10,7 @@ export default function TaskListTile({ taskId, groupId, taskDone }) {
     const [hover, setHover] = useState(false);
 
     const tasks = useTasks();
-    const tasksUpdate  = useTasksUpdate();
-    const groups = useGroups();
-    const groupsUpdate = useGroupsUpdate();
+    const tasksUpdate = useTasksUpdate();
 
     const [isDone, setIsDone] = useState(tasks[taskId].done);
 
@@ -53,22 +51,16 @@ export default function TaskListTile({ taskId, groupId, taskDone }) {
     }
 
     const toggleDone = () => {
-        tasks[taskId].done = !tasks[taskId].done;
-        setIsDone(tasks[taskId].done);
-        tasksUpdate(tasks);
+        task.done = !task.done;
+        setIsDone(task.done);
+        tasksUpdate.addTask(task);
         if (taskDone) taskDone();
     };
 
     const onDelete = (e) => {
         e.stopPropagation();
-        delete tasks[taskId];
-        if (groupId) {
-            var index = groups[groupId].tasks.indexOf(taskId);
-            groups[groupId].tasks.splice(index, 1);
-        }
+        tasksUpdate.deleteTask(task.uuid);
         mainViewUpdate(<></>)
-        tasksUpdate(tasks);
-        groupsUpdate(groups);
     }
 
     return (
@@ -83,18 +75,19 @@ export default function TaskListTile({ taskId, groupId, taskDone }) {
                         key={task.uuid}
                         title={task.title}
                         description={task.description}
-                        onUnmount={function(title, description) {
-                            tasks[task.uuid]['title'] = title;
-                            tasks[task.uuid]['description'] = description;
-                            tasksUpdate(tasks);
-                            console.log('task updated');
+                        onUnmount={function (title, description) {
+                            if (title !== task.title || description !== task.description) {
+                                task.title = title;
+                                task.description = description;
+                                tasksUpdate.addTask(task);
+                            }
                         }}
                     />
                 )
             }
         >
             {
-                isDone ? <strike style={{color: '#ffffff'}}><H3 text={task.title} /></strike> : <H3 text={task.title} />
+                isDone ? <strike style={{ color: '#ffffff' }}><H3 text={task.title} /></strike> : <H3 text={task.title} />
             }
             <div style={trailingActionsStyle}>
                 <input
@@ -102,6 +95,7 @@ export default function TaskListTile({ taskId, groupId, taskDone }) {
                     type="checkbox"
                     checked={task.done}
                     onChange={toggleDone}
+                    onClick={e => e.stopPropagation()}
                 />
                 <SmallIconButton
                     icon={bin}
