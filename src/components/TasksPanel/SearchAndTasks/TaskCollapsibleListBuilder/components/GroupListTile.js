@@ -6,7 +6,7 @@ import { useTheme } from "../../../../../theme/ThemeProvider";
 import TaskListTile from "./TaskListTile";
 import { usePopUpUpdate } from "../../../../../pop-ups/PopUpProvider";
 import TaskPopUp from "../../../../PopUps/TaskPopUp";
-import { useGroups, useGroupsUpdate, useTasks, useTasksUpdate } from "../../../../../data/DataProvider";
+import { useGroups, useGroupsUpdate, useTasks } from "../../../../../data/DataProvider";
 import { useMainViewUpdate } from "components/MainView/MainViewProvider";
 import GroupView from "components/MainView/components/GroupView";
 import SmallIconButton from "./SmallIconButton";

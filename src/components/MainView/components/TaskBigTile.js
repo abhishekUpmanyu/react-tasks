@@ -1,4 +1,4 @@
-import { useTasks, useTasksUpdate } from "data/DataProvider";
+import { useGroups, useGroupsUpdate, useTasks, useTasksUpdate } from "data/DataProvider";
 import React, { useState } from "react";
 import H3 from "typography/H3";
 import { useMainViewUpdate } from "../MainViewProvider";
@@ -31,8 +31,8 @@ export default function TaskBigTile({ taskId }) {
     }
 
     const toggleDone = () => {
-        tasks[taskId].done = !tasks[taskId].done;
-        tasksUpdate(tasks);
+        task.done = !task.done;
+        tasksUpdate.addTask(task);
     };
 
     return (
@@ -45,9 +45,9 @@ export default function TaskBigTile({ taskId }) {
                     title={task.title}
                     description={task.description}
                     onUnmount={function(title, description) {
-                        tasks[task.uuid]['title'] = title;
-                        tasks[task.uuid]['description'] = description;
-                        tasksUpdate(tasks);
+                        task.title = title;
+                        task.description = description;
+                        tasksUpdate.addTask(task);
                     }}
                 />
             )}

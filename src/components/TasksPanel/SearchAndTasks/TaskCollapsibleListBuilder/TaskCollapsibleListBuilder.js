@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import TaskListTile from './components/TaskListTile';
 import GroupListTile from "./components/GroupListTile";
-import { useGroups, useGroupsUpdate, useTasks, useTasksUpdate } from "../../../../data/DataProvider";
+import { useGroups, useTasks } from "../../../../data/DataProvider";
 
 export default function TaskCollapsibleListBuilder(props) {
     const tasks = useTasks();

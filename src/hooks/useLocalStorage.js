@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import cloneDeep from "lodash/cloneDeep";
 
 function getLocalValue(key, initialValue) {
     const value = localStorage.getItem(key);
@@ -9,7 +8,7 @@ function getLocalValue(key, initialValue) {
 export function useLocalStorage(key, initialValue) {
     const [value, setValue] = useState(() => getLocalValue(key, initialValue));
 
-    const setThisValue = (data) => { setValue(cloneDeep(data)); };
+    const setThisValue = (data) => { setValue(data); };
 
     useEffect(() => { localStorage.setItem(key, JSON.stringify(value)); },
         [value]
