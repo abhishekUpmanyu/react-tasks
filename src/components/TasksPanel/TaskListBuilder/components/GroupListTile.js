@@ -2,14 +2,14 @@ import React, { useState } from "react";
 import H3 from "typography/H3";
 import arrowhead from 'assets/icons/arrowhead.png';
 import plus from 'assets/icons/plus.png';
-import { useTheme } from "../../../../../theme/ThemeProvider";
+import { useTheme } from "theme/ThemeProvider";
 import TaskListTile from "./TaskListTile";
-import { usePopUpUpdate } from "../../../../../pop-ups/PopUpProvider";
-import TaskPopUp from "../../../../PopUps/TaskPopUp";
-import { useGroups, useGroupsUpdate, useTasks } from "../../../../../data/DataProvider";
+import { usePopUpUpdate } from "pop-ups/PopUpProvider";
+import TaskPopUp from "components/PopUps/TaskPopUp";
+import { useGroups, useGroupsUpdate, useTasks } from "data/DataProvider";
 import { useMainViewUpdate } from "components/MainView/MainViewProvider";
 import GroupView from "components/MainView/components/GroupView";
-import SmallIconButton from "./SmallIconButton";
+import SmallIconButton from "components/TasksPanel/components/SmallIconButton";
 
 export default function GroupListTile({ groupId, onClick }) {
     const [collapsed, setCollapsed] = useState(true);

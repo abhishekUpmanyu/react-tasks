@@ -1,11 +1,14 @@
 import React from "react";
 import TaskListTile from './components/TaskListTile';
 import GroupListTile from "./components/GroupListTile";
-import { useGroups, useTasks } from "../../../../data/DataProvider";
+import { useGroups, useTasks } from "data/DataProvider";
+import { useSelector } from "react-redux";
 
-export default function TaskCollapsibleListBuilder(props) {
-    const tasks = useTasks();
-    const groups = useGroups();
+export default function TaskListBuilder(props) {
+    // const tasks = useTasks();
+    const state = useSelector(state => state.search.value);
+    const groups = state.groups;
+    const tasks = state.tasks;
 
     return (
         <div>
@@ -20,7 +23,7 @@ export default function TaskCollapsibleListBuilder(props) {
             }
             {
                 Object.keys(tasks).map(
-                    key => (!tasks[key]['group']) ? <TaskListTile
+                    key => (!tasks[key]['group'] || state.query!=='') ? <TaskListTile
                         key={key}
                         taskId={key}
                         onClick={props.onChangeSelection}

@@ -2,12 +2,13 @@ import React from 'react';
 import { useTheme, useThemeUpdate } from '../../theme/ThemeProvider';
 import H1 from '../../typography/H1';
 import { FooterButtons } from './FooterButtons/FooterButtons';
-import SearchAndTasks from './SearchAndTasks/SearchAndTasks';
 import addIcon from 'assets/icons/add.png';
 import darkModeIcon from 'assets/icons/dark-mode.png';
 import TaskPopUp from '../PopUps/TaskPopUp';
 import { usePopUpUpdate } from '../../pop-ups/PopUpProvider';
 import GroupPopUp from '../PopUps/GroupPopUp';
+import Search from './Search';
+import TaskListBuilder from './TaskListBuilder/TaskListBuilder';
 
 export function TasksPanel(props) {
     const darkMode = useTheme();
@@ -30,6 +31,7 @@ export function TasksPanel(props) {
     const titleSearchTasksStyle = {
         display: 'flex',
         flexDirection: 'column',
+        rowGap: '8px',
     };
 
     const buttons = [
@@ -53,8 +55,9 @@ export function TasksPanel(props) {
     return (
         <div style={tasksPanelStyle}>
             <div style={titleSearchTasksStyle}>
-                <H1 text="Tasks" />
-                <SearchAndTasks onChangeSelection={props.onChangeSelection} />
+                <H1 text="tasks" /><br />
+                <Search />
+                <TaskListBuilder />
             </div>
             <FooterButtons buttons={buttons} />
         </div>

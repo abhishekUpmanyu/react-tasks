@@ -4,7 +4,7 @@ import { useGroups, useGroupsUpdate, useTasks, useTasksUpdate } from "data/DataP
 import React, { useState } from "react";
 import H3 from "typography/H3";
 import bin from 'assets/icons/bin.png';
-import SmallIconButton from "./SmallIconButton";
+import SmallIconButton from "components/TasksPanel/components/SmallIconButton";
 
 export default function TaskListTile({ taskId, groupId, taskDone }) {
     const [hover, setHover] = useState(false);

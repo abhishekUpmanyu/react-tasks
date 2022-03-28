@@ -6,7 +6,7 @@ export class MainView extends React.Component {
         flex: 8,
         padding: '64px 32px',
         width: '100%',
-        overflow: 'scroll',
+        overflow: 'auto',
     };
 
     render() {
