@@ -2,8 +2,8 @@ import React, { useState } from "react";
 import { useTheme } from "../../theme/ThemeProvider";
 import AccentButton from "components/AccentButton";
 import { usePopUpUpdate } from "../../pop-ups/PopUpProvider";
-import { useGroups, useGroupsUpdate, useTasks, useTasksUpdate } from "../../data/DataProvider";
-import { v4 as uuid } from 'uuid';
+import { createGroup } from "features/data";
+import { useDispatch, useSelector } from "react-redux";
 
 export default function GroupPopUp({ group }) {
     const [name, setName] = useState('');
@@ -12,11 +12,8 @@ export default function GroupPopUp({ group }) {
     
     const updatePopUp = usePopUpUpdate();
 
-    const tasks = useTasks();
-    const tasksUpdate = useTasksUpdate();
-
-    const groups = useGroups();
-    const groupsUpdate = useGroupsUpdate();
+    const dispatch = useDispatch();
+    const tasks = useSelector(state => state.data.tasks);
 
 
     const grouplessTasks = function () {
@@ -74,26 +71,20 @@ export default function GroupPopUp({ group }) {
         columnGap: '4px',
     };
 
-    const createGroup = () => {
-        var id = uuid();
+    const createNewGroup = () => {
         var selectedTasks = [];
         var tasksDone = 0;
         for (let key in grouplessTasks) {
             if (grouplessTasks[key]) {
                 selectedTasks.push(key);
-                tasks[key]['group'] = id;
-                if (tasks[key]['group'].done) tasksDone += 1;
+                if (tasks[key].done) tasksDone += 1;
             }
         }
-        var group = {
-            uuid: id,
+        dispatch(createGroup({
             name: name,
             tasks: selectedTasks,
             tasksDone: tasksDone,
-        };
-        groups[id] = group;
-        groupsUpdate(groups);
-        tasksUpdate.updateAtOnce(tasks);
+        }));
         updatePopUp(<></>);
     }
 
@@ -109,7 +100,7 @@ export default function GroupPopUp({ group }) {
                     /><br />
                     {
                         Object.keys(grouplessTasks).map(key =>
-                            <span>
+                            <span key={key}>
                                 <input
                                     style={{ margin: '12px' }}
                                     value={grouplessTasks[key]} id={key}
@@ -122,7 +113,7 @@ export default function GroupPopUp({ group }) {
                 </div>
                 <div style={buttonsContainerStyle}>
                     <AccentButton text='Cancel' type="dark" onClick={updatePopUp.bind(this, <></>)} />
-                    <AccentButton text='Create' type="dark" onClick={createGroup} />
+                    <AccentButton text='Create' type="dark" onClick={createNewGroup} />
                 </div>
             </div>
         </div>

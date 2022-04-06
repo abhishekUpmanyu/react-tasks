@@ -6,7 +6,7 @@ import SmallIconButton from './components/SmallIconButton';
 import plusIcon from 'assets/icons/plus.png';
 
 export default function Search() {
-    const selector = useSelector((state) => state.search.value);
+    const query = useSelector((state) => state.search.query);
     const dispatch = useDispatch();
 
     const darkMode = useTheme();
@@ -36,7 +36,7 @@ export default function Search() {
                 type="text"
                 placeholder="search"
                 style={inputStyle}
-                value={selector.query}
+                value={query}
                 onChange={e => dispatch(updateSearch(e.target.value))}
             />
             <div

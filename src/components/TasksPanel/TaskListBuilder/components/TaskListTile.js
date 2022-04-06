@@ -1,20 +1,21 @@
 import TaskView from "components/MainView/components/TaskView";
 import { useMainViewUpdate } from "components/MainView/MainViewProvider";
-import { useGroups, useGroupsUpdate, useTasks, useTasksUpdate } from "data/DataProvider";
 import React, { useState } from "react";
 import H3 from "typography/H3";
 import bin from 'assets/icons/bin.png';
 import SmallIconButton from "components/TasksPanel/components/SmallIconButton";
+import { useDispatch, useSelector } from "react-redux";
+import { deleteTask, toggleDone } from "features/data";
 
-export default function TaskListTile({ taskId, groupId, taskDone }) {
+export default function TaskListTile({ taskId, groupId }) {
     const [hover, setHover] = useState(false);
 
-    const tasks = useTasks();
-    const tasksUpdate = useTasksUpdate();
-
-    const mainViewUpdate = useMainViewUpdate();
+    const tasks = useSelector(state => state.data.tasks);
+    const dispatch = useDispatch();
 
     const task = tasks[taskId];
+
+    const mainViewUpdate = useMainViewUpdate();
 
     var opacity, hoverOpacity;
 
@@ -48,15 +49,15 @@ export default function TaskListTile({ taskId, groupId, taskDone }) {
         color: 'rgba(255, 255, 255, 0.3)'
     }
 
-    const toggleDone = () => {
-        task.done = !task.done;
-        tasksUpdate.addTask(task);
-        if (taskDone) taskDone();
-    };
+    // const toggleDone = () => {
+    //     task.done = !task.done;
+    //     tasksUpdate.addTask(task);
+    //     if (taskDone) taskDone();
+    // };
 
     const onDelete = (e) => {
         e.stopPropagation();
-        tasksUpdate.deleteTask(task.uuid);
+        dispatch(deleteTask(taskId));
         mainViewUpdate(<></>)
     }
 
@@ -70,15 +71,7 @@ export default function TaskListTile({ taskId, groupId, taskDone }) {
                     this,
                     <TaskView
                         key={task.uuid}
-                        title={task.title}
-                        description={task.description}
-                        onUnmount={function (title, description) {
-                            if (title !== task.title || description !== task.description) {
-                                task.title = title;
-                                task.description = description;
-                                tasksUpdate.addTask(task);
-                            }
-                        }}
+                        taskId={task.uuid}
                     />
                 )
             }
@@ -91,7 +84,7 @@ export default function TaskListTile({ taskId, groupId, taskDone }) {
                     style={checkboxStyle}
                     type="checkbox"
                     checked={task.done}
-                    onChange={toggleDone}
+                    onChange={() => dispatch(toggleDone(task.uuid))}
                     onClick={e => e.stopPropagation()}
                 />
                 <SmallIconButton

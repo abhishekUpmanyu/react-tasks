@@ -6,23 +6,21 @@ import { useTheme } from "theme/ThemeProvider";
 import TaskListTile from "./TaskListTile";
 import { usePopUpUpdate } from "pop-ups/PopUpProvider";
 import TaskPopUp from "components/PopUps/TaskPopUp";
-import { useGroups, useGroupsUpdate, useTasks } from "data/DataProvider";
 import { useMainViewUpdate } from "components/MainView/MainViewProvider";
 import GroupView from "components/MainView/components/GroupView";
 import SmallIconButton from "components/TasksPanel/components/SmallIconButton";
+import { useSelector } from "react-redux";
 
 export default function GroupListTile({ groupId, onClick }) {
     const [collapsed, setCollapsed] = useState(true);
     const [hover, setHover] = useState(false);
 
-    const tasks = useTasks();
-
-    const groups = useGroups();
-    const groupsUpdate = useGroupsUpdate();
-
-    const mainViewUpdate = useMainViewUpdate();
+    const tasks = useSelector(state => state.data.tasks);
+    const groups = useSelector(state => state.data.groups);
 
     const group = groups[groupId];
+
+    const mainViewUpdate = useMainViewUpdate();
 
     const [notDoneCount, setNotDoneCount] = useState(function() {
         var count = 0;
@@ -74,19 +72,6 @@ export default function GroupListTile({ groupId, onClick }) {
         filter: darkMode ? 'invert() opacity(70%)' : ''
     };
 
-    const taskDone = (id) => {
-        if (tasks[id]['done']) {
-            setNotDoneCount(notDoneCount-1);
-        } else {
-            setNotDoneCount(notDoneCount+1);
-        }
-        console.log(notDoneCount);
-    }
-
-    const updateCount = () => {
-        setNotDoneCount(notDoneCount+1);
-    }
-
     return (
         <div style={style}>
             <div
@@ -96,13 +81,7 @@ export default function GroupListTile({ groupId, onClick }) {
                         this,
                         <GroupView
                             key={group.uuid}
-                            name={group.name}
-                            tasks={group.tasks}
-                            onUnmount={function(name, tasks) {
-                                groups[groupId].name = name;
-                                groups[groupId].tasks = tasks;
-                                groupsUpdate(groups);
-                            }}
+                            groupId={group.uuid}
                         />
                     )
                 }
@@ -119,12 +98,12 @@ export default function GroupListTile({ groupId, onClick }) {
                             alt="arrow icon"
                         />
                         {
-                            notDoneCount===0 ? <strike style={{color: '#ffffff'}}><H3 text={group.name} /></strike> : <H3 text={group.name} />
+                            group.tasksDone===group.tasks.length ? <strike style={{color: '#ffffff'}}><H3 text={group.name} /></strike> : <H3 text={group.name} />
                         }
                     </div>
                     <SmallIconButton
                         icon={plus}
-                        onClick={updatePopUp.bind(this, <TaskPopUp groupId={groupId} groupAction={updateCount} />)}
+                        onClick={updatePopUp.bind(this, <TaskPopUp groupId={groupId} />)}
                     />
                 </div>
             </div>
@@ -134,7 +113,6 @@ export default function GroupListTile({ groupId, onClick }) {
                     taskId={key} 
                     groupId={groupId} 
                     onClick={onClick}
-                    taskDone={taskDone.bind(this, key)}
                 />
             ) : null}
         </div>

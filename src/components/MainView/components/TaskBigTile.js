@@ -1,5 +1,6 @@
-import { useGroups, useGroupsUpdate, useTasks, useTasksUpdate } from "data/DataProvider";
+import { toggleDone } from "features/data";
 import React, { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import H3 from "typography/H3";
 import { useMainViewUpdate } from "../MainViewProvider";
 import TaskView from "./TaskView";
@@ -7,9 +8,8 @@ import TaskView from "./TaskView";
 export default function TaskBigTile({ taskId }) {
     const [hover, setHover] = useState(false);
 
-    const tasks = useTasks();
-    const tasksUpdate = useTasksUpdate();
-
+    const dispatch = useDispatch();
+    const tasks = useSelector(state => state.data.tasks);
     const task = tasks[taskId];
 
     const mainViewUpdate = useMainViewUpdate();
@@ -30,11 +30,6 @@ export default function TaskBigTile({ taskId }) {
         color: 'rgba(255, 255, 255, 0.3)'
     }
 
-    const toggleDone = () => {
-        task.done = !task.done;
-        tasksUpdate.addTask(task);
-    };
-
     return (
         <div
             style={style}
@@ -42,13 +37,7 @@ export default function TaskBigTile({ taskId }) {
                 this,
                 <TaskView
                     key={task.uuid}
-                    title={task.title}
-                    description={task.description}
-                    onUnmount={function(title, description) {
-                        task.title = title;
-                        task.description = description;
-                        tasksUpdate.addTask(task);
-                    }}
+                    taskId={task.uuid}
                 />
             )}
             onMouseEnter={setHover.bind(this, true)}
@@ -58,7 +47,7 @@ export default function TaskBigTile({ taskId }) {
                     style={checkboxStyle}
                     type="checkbox"
                     checked={task.done}
-                    onChange={toggleDone}
+                    onChange={e => dispatch(toggleDone(task.uuid))}
                     onClick={e => e.stopPropagation()}
             />
             {task.done ? 

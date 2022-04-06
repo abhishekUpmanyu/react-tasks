@@ -3,18 +3,15 @@ import { useTheme } from "../../theme/ThemeProvider";
 import AccentButton from "components/AccentButton";
 import { usePopUpUpdate } from "../../pop-ups/PopUpProvider";
 import Caption from 'typography/Caption';
-import { useGroups, useGroupsUpdate, useTasks, useTasksUpdate } from "../../data/DataProvider";
-import { v4 as uuid } from 'uuid';
+import { useDispatch, useSelector } from "react-redux";
+import { createTask } from "features/data";
 
-export default function TaskPopUp(props) {
+export default function TaskPopUp({ groupId }) {
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
 
-    const tasks = useTasks();
-    const tasksUpdate = useTasksUpdate();
-
-    const groups = useGroups();
-    const groupsUpdate = useGroupsUpdate();
+    const dispatch = useDispatch();
+    const groups = useSelector(state => state.data.groups);
 
     const updatePopUp = usePopUpUpdate();
 
@@ -75,28 +72,37 @@ export default function TaskPopUp(props) {
         columnGap: '4px',
     };
 
+    // const addTask = () => {
+    //     var id = uuid();
+    //     var groupId = props.groupId;
+    //     var task = {
+    //         uuid: id,
+    //         title: title,
+    //         description: description,
+    //         color: '#ffffff',
+    //         done: false,
+    //         group: groupId
+    //     };
+    //     tasksUpdate.addTask(task, groupId);
+    //     if (props.groupAction) {
+    //         props.groupAction();
+    //     }
+    //     updatePopUp(<></>);
+    // }
+
     const addTask = () => {
-        var id = uuid();
-        var groupId = props.groupId;
-        var task = {
-            uuid: id,
+        dispatch(createTask({
             title: title,
             description: description,
-            color: '#ffffff',
-            done: false,
-            group: groupId
-        };
-        tasksUpdate.addTask(task, groupId);
-        if (props.groupAction) {
-            props.groupAction();
-        }
+            group: groupId,
+        }));
         updatePopUp(<></>);
     }
 
     return (
         <div style={backgroundStyle}>
             <div style={popUpStyle}>
-                {props.groupId ? <><Caption text={`Group: ${groups[props.groupId].name}`} /><br /></> : <></>}
+                {groupId ? <><Caption text={`Group: ${groups[groupId].name}`} /><br /></> : <></>}
                 <div style={titleDescriptionContainerStyle}>
                     <input
                         style={titleInputStyle}

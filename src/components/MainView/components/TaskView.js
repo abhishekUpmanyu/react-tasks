@@ -1,56 +1,40 @@
-import { GroupsContext, TasksContext, TasksUpdateContext } from "data/DataProvider";
+import { updateTaskDescription, updateTaskTitle } from "features/data";
 import React from "react";
+import { useDispatch, useSelector } from "react-redux";
 import BodyTextInputArea from "typography/BodyTextInputArea";
 import TitleInput from "typography/TitleInput";
 
-export default class TaskView extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            title: props.title,
-            description: props.description,
-        };
-        this.onUnmount = props.onUnmount;
-        this.containerStyle = {
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'stretch',
-        };
-    }
+export default function TaskView({ taskId }) {
+    const task = useSelector(state => state.data.tasks[taskId]);
+    const dispatch = useDispatch();
 
-    componentWillUnmount() {
-        this.onUnmount(this.state.title, this.state.description);
-    }
+    const containerStyle = {
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'stretch',
+    };
 
-    render() {
-        return (
-            <GroupsContext.Consumer>
-                {
-                    groups => <TasksContext.Consumer>
-                        {
-                            tasks => <TasksUpdateContext.Consumer>
-                                {tasksUpdate =>
-                                    <div style={this.containerStyle}>
-                                        <TitleInput
-                                            value={this.state.title}
-                                            onChange={
-                                                e => this.setState({ title: e.target.value })
-                                            }
-                                        />
-                                        <br /><br />
-                                        <BodyTextInputArea
-                                            value={this.state.description}
-                                            onChange={
-                                                e => this.setState({ description: e.target.value })
-                                            }
-                                        />
-                                    </div>
-                                }
-                            </TasksUpdateContext.Consumer>
-                        }
-                    </TasksContext.Consumer>
+    return (
+        <div style={containerStyle}>
+            <TitleInput
+                value={task.title}
+                onChange={
+                    e => dispatch(updateTaskTitle({
+                        id: task.uuid,
+                        title: e.target.value,
+                    }))
                 }
-            </GroupsContext.Consumer>
-        );
-    }
+            />
+            <br /><br />
+            <BodyTextInputArea
+                value={task.description}
+                onChange={
+                    e => dispatch(updateTaskDescription({
+                        id: task.uuid,
+                        description: e.target.value,
+                    }))
+                }
+            />
+        </div>
+    );
 }

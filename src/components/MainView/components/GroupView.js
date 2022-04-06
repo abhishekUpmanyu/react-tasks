@@ -1,58 +1,47 @@
-import { GroupsContext, TasksContext } from "data/DataProvider";
+import { updateGroupName } from "features/data";
 import React from "react";
+import { useDispatch, useSelector } from "react-redux";
 import H2 from "typography/H2";
 import TitleInput from "typography/TitleInput";
 import TaskBigTile from "./TaskBigTile";
 
-export default class GroupView extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            name: props.name,
-            tasks: props.tasks,
-        };
-        this.onUnmount = props.onUnmount;
-    }
+export default function GroupView({ groupId }) {
+    const dispatch = useDispatch();
+    const tasks = useSelector(state => state.data.tasks);
+    const groups = useSelector(state => state.data.groups);
 
-    componentWillUnmount() {
-        this.onUnmount(this.state.name, this.state.tasks);
-    }
+    const group = groups[groupId];
 
-    render() {
-        return (
-            <GroupsContext.Consumer>
-                {
-                    groups => <TasksContext.Consumer>
-                        {
-                            tasks => <>
-                                <TitleInput
-                                    value={this.state.name}
-                                    onChange={e => this.setState({ name: e.target.value })}
-                                />
-                                <br /><br />
-                                <H2 text="tasks" />
-                                {
-                                    this.state.tasks.map(
-                                        taskId => {
-                                            if (!tasks[taskId].done)
-                                                return <TaskBigTile key={taskId} taskId={taskId} />
-                                        }
-                                    )
-                                }
-                                <hr style={{borderTop: '1px solid'}} />
-                                {
-                                    this.state.tasks.map(
-                                        taskId => {
-                                            if (tasks[taskId].done)
-                                                return <TaskBigTile key={taskId} taskId={taskId} />
-                                        }
-                                    )
-                                }
-                            </>
-                        }
-                    </TasksContext.Consumer>
-                }
-            </GroupsContext.Consumer>
-        );
-    }
+    return (
+        <>
+            <TitleInput
+                value={group.name}
+                onChange={e => dispatch(updateGroupName({
+                    id: groupId,
+                    name: e.target.value,
+                }))}
+            />
+            <br /><br />
+            <H2 text={`tasks (${group.tasksDone}/${group.tasks.length})`} />
+            {
+                group.tasks.map(
+                    taskId => {
+                        if (!tasks[taskId].done)
+                            return <TaskBigTile key={taskId} taskId={taskId} />
+                        else return <></>
+                    }
+                )
+            }
+            <hr style={{ borderTop: '1px solid' }} />
+            {
+                group.tasks.map(
+                    taskId => {
+                        if (tasks[taskId].done)
+                            return <TaskBigTile key={taskId} taskId={taskId} />
+                        else return <></>
+                    }
+                )
+            }
+        </>
+    );
 }

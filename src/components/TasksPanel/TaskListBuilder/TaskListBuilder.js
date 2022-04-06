@@ -1,14 +1,12 @@
 import React from "react";
 import TaskListTile from './components/TaskListTile';
 import GroupListTile from "./components/GroupListTile";
-import { useGroups, useTasks } from "data/DataProvider";
 import { useSelector } from "react-redux";
 
 export default function TaskListBuilder(props) {
-    // const tasks = useTasks();
-    const state = useSelector(state => state.search.value);
-    const groups = state.groups;
-    const tasks = state.tasks;
+    const {query} = useSelector(state => state.search);
+    const tasks = useSelector(state => state.data.tasks);
+    const groups = useSelector(state => state.data.groups);
 
     return (
         <div>
@@ -23,7 +21,7 @@ export default function TaskListBuilder(props) {
             }
             {
                 Object.keys(tasks).map(
-                    key => (!tasks[key]['group'] || state.query!=='') ? <TaskListTile
+                    key => (!tasks[key]['group'] || query!=='') ? <TaskListTile
                         key={key}
                         taskId={key}
                         onClick={props.onChangeSelection}

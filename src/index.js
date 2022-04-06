@@ -5,7 +5,6 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import ThemeProvider from './theme/ThemeProvider';
 import PopUpProvider from 'pop-ups/PopUpProvider';
-import DataProvider from './data/DataProvider';
 import MainViewProvider from 'components/MainView/MainViewProvider';
 import { Provider } from 'react-redux';
 import store from 'store/store';
@@ -15,11 +14,9 @@ ReactDOM.render(
     <ThemeProvider>
       <MainViewProvider>
         <PopUpProvider>
-          <DataProvider>
             <Provider store={store}>
               <App />
-            </Provider>̥
-          </DataProvider>
+            </Provider>
         </PopUpProvider>
       </MainViewProvider>
     </ThemeProvider>

@@ -1,4 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { createTask } from "./data";
+import { cloneDeep } from "lodash";
 
 const initialState = function() {
     var groups = localStorage.getItem('groups');
@@ -12,39 +14,46 @@ const initialState = function() {
         groups: groups,
         tasks: tasks,
     };
-}();
+};
 
 const searchSlice = createSlice({
     name: 'search',
-    initialState: {value: initialState},
+    initialState: initialState(),
     reducers: {
         updateSearch: (state, action) => {
+            var initialStateInstance = initialState();
             var searchedGroups = {};
             var searchedTasks = {};
-            console.log(initialState);
-            for (let id in initialState.groups) {
+            for (let id in initialStateInstance.groups) {
                 if (
-                    initialState.groups[id].name.toLowerCase().includes(action.payload.toLowerCase())
+                    initialStateInstance.groups[id].name.toLowerCase().includes(action.payload.toLowerCase())
                 ) {
-                    searchedGroups[id] = initialState.groups[id];
+                    searchedGroups[id] = initialStateInstance.groups[id];
                 }
             }
-            for (let id in initialState.tasks) {
+            for (let id in initialStateInstance.tasks) {
                 if (
-                    initialState.tasks[id].title.toLowerCase().includes(action.payload.toLowerCase()) ||
-                    initialState.tasks[id].description.toLowerCase().includes(action.payload.toLowerCase())
+                    initialStateInstance.tasks[id].title.toLowerCase().includes(action.payload.toLowerCase()) ||
+                    initialStateInstance.tasks[id].description.toLowerCase().includes(action.payload.toLowerCase())
                 ) {
-                    searchedTasks[id] = initialState.tasks[id];
+                    searchedTasks[id] = initialStateInstance.tasks[id];
                 }
             }
-            state.value = {
+            state = {
                 query: action.payload,
                 groups: searchedGroups,
                 tasks: searchedTasks,
             };
+            console.log(state);
+            return state;
         },
-        clearSearch: (state, action) => {
-            state.value = initialState;
+        clearSearch: (state, action) => initialState()
+    },
+    extraReducers: {
+        [createTask]: (state, action) => {
+            state = initialState();
+            console.log(state);
+            return state;
         }
     }
 });
